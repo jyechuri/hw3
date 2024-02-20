@@ -77,14 +77,40 @@ Node* llfilter(Node* head, Comp pred);
 // implement the above function now.
 //*****************************************************************************
 
+// because pred is a Comp object and implements the operator()
+struct Comp
+{
+    // return true if node needs to be removed
+    bool operator()(int value);
+};
+
 template <typename Comp>
 Node* llfilter(Node* head, Comp pred)
 {
     //*********************************************
-    // Provide your implementation below
+    // Provide your implementation below -- TEST THISSSS
     //*********************************************
-
-
+    // nothing to check
+    if (head == nullptr)
+    {
+        return head;
+    }
+    // remove item
+    if (pred(head->val) == true)
+    {
+        Node * victim = head;
+        // go through all nodes
+        head = llfilter(head->next, pred);
+        delete victim;
+        victim = nullptr;
+        return head;
+    }
+    else
+    {   
+        // continue traversing
+        head = llfilter (head -> next, pred);
+        return head;
+    }
 }
 
 #endif
