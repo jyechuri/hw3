@@ -103,12 +103,19 @@ void Heap<T, PComparator>::heapifyUp(int index)
   */
   // index is passed in
   std::size_t parent_index = (index - 1) / m_;
-  while ((parent_index >= 0) && (comparator(heap[index], heap[parent_index])))
+  while ((parent_index >= 0) )
   {
-
-    std::swap(heap[index], heap[parent_index]);
-    index = parent_index;
-    parent_index = (index - 1) / m_;
+    if (comparator(heap[index], heap[parent_index]))
+    {
+      std::swap(heap[index], heap[parent_index]);
+      index = parent_index;
+      parent_index = (index - 1) / m_;
+    }
+    else
+    {
+      break;
+    }
+      
   }
 }
 

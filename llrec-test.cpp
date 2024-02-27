@@ -28,6 +28,19 @@ void print(Node* head);
  */
 void dealloc(Node* head);
 
+// do not include odd values
+struct pred { 
+    bool operator()(int x) 
+    { 
+        if(x % 2 != 0)
+        { 
+            return true;
+        } else {
+            return false;
+        }
+    }
+};
+
 
 Node* readList(const char* filename)
 {
@@ -87,7 +100,27 @@ int main(int argc, char* argv[])
     print(head);
 
     // Test out your linked list code
+    Node* smaller;
+    Node* larger;
+    int input;
+    pred c;
 
+    cout << "Option 1 for pivot or 2 to filter list" << endl;
+    cin >> input;
+    if(input == 1)
+    {
+        llpivot(head, smaller, larger, 8);
+        cout << "llpivot - small: ";
+        print(smaller);
+        cout << "llpivot - large: ";
+        print(larger);
+        cout << "Head value: ";
+        print(head);
+    } else if(input == 2) {
+        head = llfilter(head, c);
+        cout << "llfilter output: ";
+        print(head);
+    } 
 
 
     

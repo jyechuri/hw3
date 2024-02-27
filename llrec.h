@@ -108,9 +108,10 @@ Node* llfilter(Node* head, Comp pred)
     else
     {   
         // continue traversing
-        head = llfilter (head -> next, pred);
+        head -> next = llfilter (head -> next, pred);
         return head;
     }
+		return head;
 }
 
 #endif
