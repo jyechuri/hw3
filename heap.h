@@ -62,7 +62,7 @@ public:
 
 private:
   /// Add whatever helper functions and data members you need below
-  void trickleDown(int value); // FINISH THIS
+  void trickleDown(int index); // FINISH THIS
   void heapifyUp(int index);   // FIX THIS
 
   std::vector<T> heap;
@@ -73,7 +73,7 @@ private:
 
 // Add implementation of member functions here
 template <typename T, typename PComparator>
-Heap<T, PComparator>::Heap(int m = 2, PComparator c)
+Heap<T, PComparator>::Heap(int m, PComparator c)
 {
   m_ = m;
   comparator = c;
@@ -82,18 +82,34 @@ Heap<T, PComparator>::Heap(int m = 2, PComparator c)
 template <typename T, typename PComparator>
 Heap<T, PComparator>::~Heap()
 {
-  // IS THIS CORRECT??
-  for (int i = 0; i < heap.size(); i++)
-  {
-    item.pop_back(i);
-  }
+  heap.clear();
 }
 
 template <typename T, typename PComparator>
 void Heap<T, PComparator>::push(const T &item)
 {
   heap.push_back(item);
-  heaifyUp(heap.size() - 1); // IMPLEMENT THIS
+  heapifyUp(heap.size() - 1);
+}
+
+// IMPLEMENT HEAPIFY HERE
+template <typename T, typename PComparator>
+void Heap<T, PComparator>::heapifyUp(int index)
+{
+  /*
+    binary predicate function/functor that takes two items
+    as an argument and returns a bool if the first argument has
+    priority over the second. -- CHECK THIS
+  */
+  // index is passed in
+  std::size_t parent_index = (index - 1) / m_;
+  while ((parent_index >= 0) && (comparator(heap[index], heap[parent_index])))
+  {
+
+    std::swap(heap[index], heap[parent_index]);
+    index = parent_index;
+    parent_index = (index - 1) / m_;
+  }
 }
 
 // We will start top() for you to handle the case of
@@ -108,13 +124,13 @@ T const &Heap<T, PComparator>::top() const
     // ================================
     // throw the appropriate exception
     // ================================
-    throw std::out_of_range("heap is empty");
+    throw std::underflow_error("Heap is empty.");
   }
   // If we get here we know the heap has at least 1 item
   // Add code to return the top element
   else
   {
-    heap[0];
+    return heap[0];
   }
 }
 
@@ -129,7 +145,7 @@ void Heap<T, PComparator>::pop()
     // ================================
     // throw the appropriate exception
     // ================================
-    throw std::out_of_range("heap is empty");
+    throw std::underflow_error("heap is empty");
   }
   else
   {
@@ -138,23 +154,47 @@ void Heap<T, PComparator>::pop()
     trickleDown(0); // FINISH THIS
   }
 }
-/*
+
 // bool if the first argument has -- priority over the second.
- template <typename T, typename PComparator>
- void Heap<T, PComparator>::trickleDown(int value)
- {
-   for (int i = 0; i < heap.size(); i++)
-   {
-     // check priority if necessary to swap or not -- if (arr[value]->getPriority() < arr[i]->getPriority())
+template <typename T, typename PComparator>
+void Heap<T, PComparator>::trickleDown(int index)
+{
+  // need to be in bounds - check because of recurssion -- make sure nothing gets messed around
+  if (index >= heap.size() || index < 0)
+  {
+    return;
+  }
+  std::size_t highPChild = m_ * index + 1;
 
-     if (comparator(heap[i],heap[value]))
-     {
-       swap(arr[i], arr[value]);
-     }
-   }
- }
- */
+  // check all chilren of parent starting from left
+  for (int i = 0; ((highPChild + i) < heap.size()) && (i < m_); i++)
+  {
+    std::size_t currChild = highPChild + i;
+    // check priority if necessary to swap or not
+    if (comparator(heap[currChild], heap[highPChild]))
+    {
+      highPChild = currChild;
+    }
+  }
+  // be in bounds
+  if (highPChild < heap.size())
+  {
+    if (comparator(heap[highPChild], heap[index]))
+    {
+      // swap index with most priority of child
+      std::swap(heap[index], heap[highPChild]);
+      trickleDown(highPChild); // Recursively call to maintain order
+    }
+  }
+}
 
+template <typename T, typename PComparator>
+size_t Heap<T, PComparator>::size() const
+{
+  return (heap.size());
+}
+
+// check if anything exists in heap
 // less-than check of two items in the heap then we will have a min-heap
 // greater-than check of two items in the heap, we will have a max-heap
 template <typename T, typename PComparator>
@@ -168,12 +208,6 @@ bool Heap<T, PComparator>::empty() const
   {
     return false;
   }
-}
-
-template <typename T, typename PComparator>
-size_t Heap<T, PComparator>::size() const
-{
-  return (heap.size());
 }
 
 #endif

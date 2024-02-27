@@ -20,10 +20,18 @@ class Circuit
 		
 	private:
 		uint64_t m_current_time;
-    std::vector<Gate*> m_gates;
-    std::vector<Wire*> m_wires;
+    	std::vector<Gate*> m_gates;
+    	std::vector<Wire*> m_wires;
 		// we need to add the m_pq data member. It should be a min-heap of Event*;
-        
+		/*
+			Add the m_pq data member to the Circuit class. This data member must
+			use your Heap class from the previous part of the assignment and it
+			must use the EventLess functor.
+			template <typename T, typename PComparator>
+			T = Event*
+			PComparator = EventLess
+		*/
+		Heap<Event *, EventLess> m_pq;
 };
 
 #endif
