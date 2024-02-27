@@ -63,6 +63,7 @@ public:
 private:
   /// Add whatever helper functions and data members you need below
   void trickleDown(int index); // FINISH THIS
+  //void trickleDown();
   void heapifyUp(int index);   // FIX THIS
 
   std::vector<T> heap;
@@ -103,7 +104,7 @@ void Heap<T, PComparator>::heapifyUp(int index)
   */
   // index is passed in
   std::size_t parent_index = (index - 1) / m_;
-  while ((parent_index >= 0) )
+  while ((parent_index >= 0))
   {
     if (comparator(heap[index], heap[parent_index]))
     {
@@ -115,7 +116,6 @@ void Heap<T, PComparator>::heapifyUp(int index)
     {
       break;
     }
-      
   }
 }
 
@@ -159,13 +159,20 @@ void Heap<T, PComparator>::pop()
     heap[0] = heap[numItems - 1];
     heap.pop_back();
     trickleDown(0); // FINISH THIS
+    //trickleDown();
   }
 }
 
-// bool if the first argument has -- priority over the second.
+
+/*// bool if the first argument has -- priority over the second.
 template <typename T, typename PComparator>
 void Heap<T, PComparator>::trickleDown(int index)
 {
+  
+  if (heap.size() == 1)
+  {
+    return;
+  }
   // need to be in bounds - check because of recurssion -- make sure nothing gets messed around
   if (index >= heap.size() || index < 0)
   {
@@ -178,6 +185,8 @@ void Heap<T, PComparator>::trickleDown(int index)
   {
     std::size_t currChild = highPChild + i;
     // check priority if necessary to swap or not
+    if (y >= size())  // no more children
+      break;
     if (comparator(heap[currChild], heap[highPChild]))
     {
       highPChild = currChild;
@@ -193,7 +202,102 @@ void Heap<T, PComparator>::trickleDown(int index)
       trickleDown(highPChild); // Recursively call to maintain order
     }
   }
+  
+}*/
+
+
+// template <typename T, typename PComparator>
+// void Heap<T, PComparator>::trickleDown(int index)
+// {
+//     // start from given index
+//     bool isWork = true;
+//     int ind = index; 
+//     while (isWork) 
+//     {
+//       // first child
+//       int currChild = m_ * ind + 1; 
+//       // make sure child exists
+//       if (currChild >= heap.size())
+//       {
+//         break;
+//       }
+//       // check all chilren
+//       int highPChild = currChild;
+//       // start after the leftmost child
+//       for (int right = 2; right < m_ + 1; ++right) 
+//       { 
+//         int otherChild = m_ * ind + right; // all the children on the right
+
+//         if (comparator(heap[otherChild], heap[highPChild]))  
+//         {
+//           highPChild = otherChild;
+//         }
+//         if (otherChild >= heap.size())
+//         {
+//            break;
+//         } 
+//       }
+
+//       if (comparator(heap[highPChild], heap[ind])) 
+//       { 
+//         std::swap(heap[highPChild], heap[ind]);
+//         ind = highPChild;
+//       } 
+//       else 
+//       {
+//         isWork = false;
+//       }
+//     }
+// }
+
+
+template <typename T, typename PComparator>
+void Heap<T, PComparator>::trickleDown(int index)
+{
+    bool isWork = true;
+    int ind = index; // Start from the given index
+
+    while (isWork) 
+    {
+        int currChild = m_ * ind + 1; // Index of the first child
+
+        if (currChild >= heap.size()) // If there are no children
+        {
+            break;
+        }
+        int highPChild = currChild; // Initialize highest priority child
+        int right = 2; // Start with the second child
+
+        while (right < m_ + 1) // Loop through all children
+        { 
+            int otherChild = m_ * ind + right; // Index of other child
+            if (otherChild >= heap.size()) // If no more children
+            {
+                break;
+            }
+
+            // Compare current child with highest priority child
+            if (comparator(heap[otherChild], heap[highPChild]))  
+            {
+                highPChild = otherChild; // Update highest priority child
+            }
+
+            // move to next child
+            right++;
+        }
+
+        if (comparator(heap[highPChild], heap[ind])) 
+        { 
+            std::swap(heap[highPChild], heap[ind]);
+            ind = highPChild; // Update index to highest priority child
+        } 
+        else 
+        {
+            isWork = false; // Stop if no swap is needed
+        }
+    }
 }
+
 
 template <typename T, typename PComparator>
 size_t Heap<T, PComparator>::size() const
