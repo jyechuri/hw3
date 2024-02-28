@@ -240,15 +240,17 @@ void Heap<T, PComparator>::trickleDown(int index)
             // move to next child
             right++;
         }
-
-        if (comparator(heap[highPChild], heap[ind])) 
-        { 
-            std::swap(heap[highPChild], heap[ind]);
-            ind = highPChild; // Update index to highest priority child
-        } 
-        else 
+        if (highPChild < heap.size())
         {
-            isWork = false; // Stop if no swap is needed
+          if (comparator(heap[highPChild], heap[ind])) 
+          { 
+              std::swap(heap[highPChild], heap[ind]);
+              ind = highPChild; // Update index to highest priority child
+          } 
+          else 
+          {
+              isWork = false; // Stop if no swap is needed
+          }
         }
     }
 }
