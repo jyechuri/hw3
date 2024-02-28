@@ -206,51 +206,6 @@ void Heap<T, PComparator>::trickleDown(int index)
 }*/
 
 
-// template <typename T, typename PComparator>
-// void Heap<T, PComparator>::trickleDown(int index)
-// {
-//     // start from given index
-//     bool isWork = true;
-//     int ind = index; 
-//     while (isWork) 
-//     {
-//       // first child
-//       int currChild = m_ * ind + 1; 
-//       // make sure child exists
-//       if (currChild >= heap.size())
-//       {
-//         break;
-//       }
-//       // check all chilren
-//       int highPChild = currChild;
-//       // start after the leftmost child
-//       for (int right = 2; right < m_ + 1; ++right) 
-//       { 
-//         int otherChild = m_ * ind + right; // all the children on the right
-
-//         if (comparator(heap[otherChild], heap[highPChild]))  
-//         {
-//           highPChild = otherChild;
-//         }
-//         if (otherChild >= heap.size())
-//         {
-//            break;
-//         } 
-//       }
-
-//       if (comparator(heap[highPChild], heap[ind])) 
-//       { 
-//         std::swap(heap[highPChild], heap[ind]);
-//         ind = highPChild;
-//       } 
-//       else 
-//       {
-//         isWork = false;
-//       }
-//     }
-// }
-
-
 template <typename T, typename PComparator>
 void Heap<T, PComparator>::trickleDown(int index)
 {
